@@ -2,11 +2,10 @@ package com.example.moviesapplication.repositories
 
 import androidx.lifecycle.MutableLiveData
 import com.example.moviesapplication.interfaces.NetworkResponseCallback
+import com.example.moviesapplication.models.genre.GenreModel
 import com.example.moviesapplication.models.moviedetail.MovieDetailModel
 import com.example.moviesapplication.models.movieslist.Movies
 import com.example.moviesapplication.networks.RestClient
-import okhttp3.MediaType
-import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,87 +15,123 @@ class MoviesRepository private constructor() {
     private lateinit var mCallback: NetworkResponseCallback
 
 
-    private var mMovie: MutableLiveData<Movies?> = MutableLiveData<Movies?>()
+    private var movies: MutableLiveData<Movies?> = MutableLiveData<Movies?>()
     private lateinit var movieCall: Call<Movies>
 
 
-    private var mMovieDetail: MutableLiveData<MovieDetailModel?> = MutableLiveData<MovieDetailModel?>()
+    private var movieDetail: MutableLiveData<MovieDetailModel?> = MutableLiveData<MovieDetailModel?>()
     private lateinit var movieDetailCall: Call<MovieDetailModel>
 
-    fun getMovies(callback: NetworkResponseCallback, forceFetch: Boolean,page: Int): MutableLiveData<Movies?> {
+    private var genres: MutableLiveData<List<GenreModel?>?> = MutableLiveData<List<GenreModel?>?>()
+    private lateinit var genreCall: Call<List<GenreModel>>
+
+    fun getMovies(callback: NetworkResponseCallback, forceFetch: Boolean, page: Int): MutableLiveData<Movies?> {
         mCallback = callback
-        if (mMovie.value != null && !forceFetch) {
+        if (movies.value != null && !forceFetch) {
             mCallback.onResponseSuccess()
-            return mMovie
+            return movies
         }
         movieCall = RestClient.getInstance().getApiService().getMovies(page)
         movieCall.enqueue(object : Callback<Movies> {
 
             override fun onResponse(call: Call<Movies>, response: Response<Movies>) {
-                mMovie.value = response.body()
+                movies.value = response.body()
                 mCallback.onResponseSuccess()
             }
 
             override fun onFailure(call: Call<Movies>, t: Throwable) {
-                mMovie.value = null
+                movies.value = null
                 mCallback.onResponseFailure(t)
             }
 
         })
-        return mMovie
+        return movies
     }
 
 
-    fun searchMovies(callback: NetworkResponseCallback, forceFetch: Boolean,movieName:String,page:Int):MutableLiveData<Movies?>{
-        mCallback=callback
-        if (mMovie.value!=null&&!forceFetch){
+    fun searchMovies(
+        callback: NetworkResponseCallback,
+        forceFetch: Boolean,
+        movieName: String,
+        page: Int
+    ): MutableLiveData<Movies?> {
+        mCallback = callback
+        if (movies.value != null && !forceFetch) {
             mCallback.onResponseSuccess()
-            return mMovie
+            return movies
         }
 
-        movieCall=RestClient.getInstance().getApiService().searchMovies(movieName,page)
-        movieCall.enqueue(object :Callback<Movies>{
+        movieCall = RestClient.getInstance().getApiService().searchMovies(movieName, page)
+        movieCall.enqueue(object : Callback<Movies> {
 
             override fun onResponse(p0: Call<Movies>, response: Response<Movies>) {
-                mMovie.value=response.body()
+                movies.value = response.body()
                 mCallback.onResponseSuccess()
             }
 
             override fun onFailure(p0: Call<Movies>, t: Throwable) {
-                mMovie.value = null
+                movies.value = null
                 mCallback.onResponseFailure(t)
             }
 
         })
 
-        return mMovie
+        return movies
     }
 
-    fun getMovieDetail(callback: NetworkResponseCallback, forceFetch: Boolean,movieId:Int) :MutableLiveData<MovieDetailModel?>{
-        mCallback=callback
-        if (mMovieDetail.value!=null&&!forceFetch){
+    fun getMovieDetail(
+        callback: NetworkResponseCallback,
+        forceFetch: Boolean,
+        movieId: Int
+    ): MutableLiveData<MovieDetailModel?> {
+        mCallback = callback
+        if (movieDetail.value != null && !forceFetch) {
             mCallback.onResponseSuccess()
-            return mMovieDetail
+            return movieDetail
         }
 
         movieDetailCall = RestClient.getInstance().getApiService().getMoviesDetail(movieId)
-        movieDetailCall.enqueue(object : Callback<MovieDetailModel>{
+        movieDetailCall.enqueue(object : Callback<MovieDetailModel> {
 
             override fun onResponse(p0: Call<MovieDetailModel>, response: Response<MovieDetailModel>) {
-                mMovieDetail.value=response.body()
+                movieDetail.value = response.body()
                 mCallback.onResponseSuccess()
             }
 
             override fun onFailure(p0: Call<MovieDetailModel>, t: Throwable) {
-                mMovieDetail.value=null
+                movieDetail.value = null
                 mCallback.onResponseFailure(t)
             }
 
         })
 
-        return mMovieDetail
+        return movieDetail
     }
 
+
+    fun getGenres(callback: NetworkResponseCallback): MutableLiveData<List<GenreModel?>?> {
+        mCallback = callback
+
+        if (genres.value != null) {
+            mCallback.onResponseSuccess()
+            return genres;
+        }
+        genreCall = RestClient.getInstance().getApiService().getGenres()
+        genreCall.enqueue(object : Callback<List<GenreModel>?> {
+            override fun onResponse(p0: Call<List<GenreModel>?>, response: Response<List<GenreModel>?>) {
+                genres.value = response.body()
+                mCallback.onResponseSuccess()
+            }
+
+            override fun onFailure(p0: Call<List<GenreModel>?>, t: Throwable) {
+                movieDetail.value = null
+                mCallback.onResponseFailure(t)
+            }
+
+        })
+
+        return genres;
+    }
 
     companion object {
         private var mInstance: MoviesRepository? = null

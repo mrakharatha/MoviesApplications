@@ -15,11 +15,14 @@ import com.example.moviesapplication.adapters.MoviesAdapter
 import com.example.moviesapplication.databinding.ActivityMainBinding
 import com.example.moviesapplication.viewmodels.MoviesViewModel
 import com.example.moviesapplication.R
+import com.example.moviesapplication.adapters.GenresAdapter
+import com.example.moviesapplication.models.genre.GenreModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var moviesAdapter: MoviesAdapter
+    lateinit var genresAdapter: GenresAdapter
     private lateinit var moviesViewModel: MoviesViewModel
     var page = 1
     var searchText: String = ""
@@ -39,10 +42,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         moviesAdapter = MoviesAdapter()
+        genresAdapter=GenresAdapter()
+
         binding.rvMovies.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
             adapter = moviesAdapter
+        }
+
+        binding.rvGenres.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = genresAdapter
         }
     }
 
@@ -50,6 +61,10 @@ class MainActivity : AppCompatActivity() {
         moviesViewModel.getMovies(false, page).observe(this, Observer { movie ->
             moviesAdapter.setData(movie?.data!!, this@MainActivity)
         })
+        moviesViewModel.getGenres().observe(this, Observer { genre ->
+            genresAdapter.setData(genre as List<GenreModel>, this@MainActivity)
+        })
+
         moviesViewModel.mShowApiError.observe(this) {
             AlertDialog.Builder(this).setMessage(it).show()
         }
@@ -65,6 +80,7 @@ class MainActivity : AppCompatActivity() {
         moviesViewModel.mShowNetworkError.observe(this) {
             AlertDialog.Builder(this).setMessage(R.string.app_no_internet_msg).show()
         }
+
 
     }
 

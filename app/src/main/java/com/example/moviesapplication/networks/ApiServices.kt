@@ -1,3 +1,4 @@
+import com.example.moviesapplication.models.genre.GenreModel
 import com.example.moviesapplication.models.moviedetail.MovieDetailModel
 import com.example.moviesapplication.models.movieslist.Movies
 
@@ -16,4 +17,8 @@ interface ApiServices {
 
     @GET("api/v1/movies/{movie_id}")
     fun getMoviesDetail(@Path("movie_id") id: Int): Call<MovieDetailModel>
+
+
+    @GET("api/v1/genres")
+    fun getGenres(): Call<List<GenreModel>>
 }
