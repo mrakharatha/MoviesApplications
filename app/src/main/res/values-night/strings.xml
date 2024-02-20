@@ -4,4 +4,5 @@
     <string name="year">سال ساخت :</string>
     <string name="country">کشور سازنده :</string>
     <string name="app_no_internet_msg">دستگاه شما به اینترنت متصل نیست !</string>
+    <string name="searchText">جستجو فیلم</string>
 </resources>

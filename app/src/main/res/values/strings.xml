@@ -6,4 +6,5 @@
     <string name="rating">امتیاز فیلم :</string>
     <string name="genres">ژانر :</string>
     <string name="app_no_internet_msg">دستگاه شما به اینترنت متصل نیست !</string>
+    <string name="searchText">جستجو فیلم</string>
 </resources>
