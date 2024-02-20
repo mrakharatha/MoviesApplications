@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">موضوع :</string>
+    <string name="year">سال ساخت :</string>
+    <string name="country">کشور سازنده :</string>
+    <string name="app_no_internet_msg">دستگاه شما به اینترنت متصل نیست !</string>
+</resources>
