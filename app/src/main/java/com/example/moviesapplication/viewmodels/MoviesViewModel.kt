@@ -13,10 +13,11 @@ import com.example.moviesapplication.utils.NetworkHelper
 
 class MoviesViewModel(private val app: Application) : AndroidViewModel(app) {
 
-    private lateinit var movies: MutableLiveData<Movies?>
     val mShowProgressBar = MutableLiveData(true)
     val mShowNetworkError: MutableLiveData<Boolean> = MutableLiveData()
     val mShowApiError = MutableLiveData<String>()
+
+    private lateinit var movies: MutableLiveData<Movies?>
     private var mRepository = MoviesRepository.getInstance()
 
     fun getMovies(forceFetch: Boolean, page: Int): MutableLiveData<Movies?> {
@@ -31,7 +32,7 @@ class MoviesViewModel(private val app: Application) : AndroidViewModel(app) {
                     mShowApiError.value = th.message
                 }
 
-            }, forceFetch,page)
+            }, forceFetch, page)
         } else {
             mShowNetworkError.value = true
         }
@@ -59,7 +60,7 @@ class MoviesViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun onRefreshClicked(view: View) {
-        getMovies(true,1)
+        getMovies(true, 1)
     }
 
 

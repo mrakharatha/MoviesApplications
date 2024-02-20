@@ -7,4 +7,23 @@
     <string name="genres">ژانر :</string>
     <string name="app_no_internet_msg">دستگاه شما به اینترنت متصل نیست !</string>
     <string name="searchText">جستجو فیلم</string>
+    <string name="rated">رتبه :</string>
+    <string name="released_date">تاریخ انتشار :</string>
+    <string name="runtime">مدت زمان :</string>
+    <string name="about_writer">درباره نویسنده و کارگردان</string>
+    <string name="director">کارگردان :</string>
+    <string name="writer">نویسنده :</string>
+    <string name="actors">بازیگران :</string>
+    <string name="plot">طراح :</string>
+    <string name="rating_score">رتبه و ارزش فیلم</string>
+    <string name="imdb_rating"> رتبه در سایت imdb :</string>
+    <string name="imdb_votes">تعداد رای سایت imdb :</string>
+    <string name="imdb_id">شناسه imdb :</string>
+    <string name="type">نوع محصول :</string>
+    <string name="awards">جوایز :</string>
+    <string name="meta_score">امتیاز متا :</string>
+    <string name="movie_name">نام فیلم</string>
+    <string name="imdb_text">شناسه‌ی فیلم در سایت IMDB</string>
+    <string name="poster">پوستر فیلم</string>
+
 </resources>

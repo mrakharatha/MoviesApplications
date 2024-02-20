@@ -12,13 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.moviesapplication.R
 import com.example.moviesapplication.models.movieslist.MoviesData
+import com.example.moviesapplication.ui.moviedetail.MovieDetailActivity
 import java.text.FieldPosition
 
 class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>() {
     var movies: List<MoviesData>? = listOf()
     var context: Context? = null
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): MoviesViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_movies, p0,false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_movies, p0, false)
         return MoviesViewHolder(view)
     }
 
@@ -34,6 +35,11 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>() {
         holder.country.text = movie?.country.toString()
         holder.rating.text = movie?.imdbrating.toString()
         holder.genres.text = movie?.genres.toString()
+        holder.cvMovies.setOnClickListener {
+            var intent = Intent(context, MovieDetailActivity::class.java)
+            intent.putExtra("movieId", movie?.id)
+            context?.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {

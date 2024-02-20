@@ -2,6 +2,7 @@ package com.example.moviesapplication.repositories
 
 import androidx.lifecycle.MutableLiveData
 import com.example.moviesapplication.interfaces.NetworkResponseCallback
+import com.example.moviesapplication.models.moviedetail.MovieDetailModel
 import com.example.moviesapplication.models.movieslist.Movies
 import com.example.moviesapplication.networks.RestClient
 import okhttp3.MediaType
@@ -13,11 +14,14 @@ import retrofit2.Response
 
 class MoviesRepository private constructor() {
     private lateinit var mCallback: NetworkResponseCallback
-    private var mMovie: MutableLiveData<Movies?> = MutableLiveData<Movies?>()
-    private var genresMovie: MutableLiveData<Movies?> = MutableLiveData<Movies?>()
-    private lateinit var movieCall: Call<Movies>
-    private lateinit var genresMovieCall: Call<Movies>
 
+
+    private var mMovie: MutableLiveData<Movies?> = MutableLiveData<Movies?>()
+    private lateinit var movieCall: Call<Movies>
+
+
+    private var mMovieDetail: MutableLiveData<MovieDetailModel?> = MutableLiveData<MovieDetailModel?>()
+    private lateinit var movieDetailCall: Call<MovieDetailModel>
 
     fun getMovies(callback: NetworkResponseCallback, forceFetch: Boolean,page: Int): MutableLiveData<Movies?> {
         mCallback = callback
@@ -66,6 +70,31 @@ class MoviesRepository private constructor() {
         })
 
         return mMovie
+    }
+
+    fun getMovieDetail(callback: NetworkResponseCallback, forceFetch: Boolean,movieId:Int) :MutableLiveData<MovieDetailModel?>{
+        mCallback=callback
+        if (mMovieDetail.value!=null&&!forceFetch){
+            mCallback.onResponseSuccess()
+            return mMovieDetail
+        }
+
+        movieDetailCall = RestClient.getInstance().getApiService().getMoviesDetail(movieId)
+        movieDetailCall.enqueue(object : Callback<MovieDetailModel>{
+
+            override fun onResponse(p0: Call<MovieDetailModel>, response: Response<MovieDetailModel>) {
+                mMovieDetail.value=response.body()
+                mCallback.onResponseSuccess()
+            }
+
+            override fun onFailure(p0: Call<MovieDetailModel>, t: Throwable) {
+                mMovieDetail.value=null
+                mCallback.onResponseFailure(t)
+            }
+
+        })
+
+        return mMovieDetail
     }
 
 
