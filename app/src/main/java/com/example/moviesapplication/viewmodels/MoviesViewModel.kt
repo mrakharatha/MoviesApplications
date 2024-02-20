@@ -20,6 +20,7 @@ class MoviesViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private lateinit var movies: MutableLiveData<Movies?>
     private lateinit var genres: MutableLiveData<List<GenreModel?>?>
+    private lateinit var genresMovie: MutableLiveData<Movies?>
     private var mRepository = MoviesRepository.getInstance()
 
     fun getMovies(forceFetch: Boolean, page: Int): MutableLiveData<Movies?> {
@@ -79,6 +80,26 @@ class MoviesViewModel(private val app: Application) : AndroidViewModel(app) {
         }
 
         return genres
+    }
+
+
+    fun getGenresMovie(forceFetch: Boolean, genreId: Int, page: Int): MutableLiveData<Movies?> {
+        if (NetworkHelper.isOnline(app.baseContext)) {
+            mShowProgressBar.value = true
+            genresMovie = mRepository.getGenresMovie(object : NetworkResponseCallback {
+                override fun onResponseSuccess() {
+                    mShowProgressBar.value = false
+                }
+
+                override fun onResponseFailure(th: Throwable) {
+                    mShowApiError.value = th.message
+                }
+
+            }, forceFetch, genreId, page)
+        } else {
+            mShowNetworkError.value = true
+        }
+        return genresMovie
     }
 
     fun onRefreshClicked(view: View) {

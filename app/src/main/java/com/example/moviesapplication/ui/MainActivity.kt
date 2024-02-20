@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var moviesAdapter: MoviesAdapter
     lateinit var genresAdapter: GenresAdapter
     private lateinit var moviesViewModel: MoviesViewModel
-    var page = 1
     var searchText: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         moviesAdapter = MoviesAdapter()
-        genresAdapter=GenresAdapter()
+        genresAdapter = GenresAdapter()
 
         binding.rvMovies.apply {
             setHasFixedSize(true)
@@ -58,11 +57,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeObservers() {
-        moviesViewModel.getMovies(false, page).observe(this, Observer { movie ->
+
+        moviesViewModel.getGenresMovie(false, genreId, page)
+            .observe(this, Observer { movie ->
+                moviesAdapter.setData(movie?.data!!, this@MainActivity)
+            })
+
+        moviesViewModel.getMovies(false,1).observe(this, Observer { movie ->
             moviesAdapter.setData(movie?.data!!, this@MainActivity)
         })
+
         moviesViewModel.getGenres().observe(this, Observer { genre ->
-            genresAdapter.setData(genre as List<GenreModel>, this@MainActivity)
+            genresAdapter.setData(genre as List<GenreModel>, this@MainActivity, moviesViewModel)
         })
 
         moviesViewModel.mShowApiError.observe(this) {
@@ -114,13 +120,18 @@ class MainActivity : AppCompatActivity() {
                         AlertDialog.Builder(this@MainActivity).setMessage(R.string.app_no_internet_msg).show()
                     }
 
-                }else{
-                    moviesViewModel.getMovies(true,page)
+                } else {
+                    moviesViewModel.getMovies(true, page)
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         })
+    }
+
+    companion object {
+        var genreId: Int = 0
+        var page: Int = 0
     }
 }

@@ -12,18 +12,21 @@ import retrofit2.Response
 
 
 class MoviesRepository private constructor() {
-    private lateinit var mCallback: NetworkResponseCallback
 
+    private lateinit var mCallback: NetworkResponseCallback
 
     private var movies: MutableLiveData<Movies?> = MutableLiveData<Movies?>()
     private lateinit var movieCall: Call<Movies>
-
 
     private var movieDetail: MutableLiveData<MovieDetailModel?> = MutableLiveData<MovieDetailModel?>()
     private lateinit var movieDetailCall: Call<MovieDetailModel>
 
     private var genres: MutableLiveData<List<GenreModel?>?> = MutableLiveData<List<GenreModel?>?>()
     private lateinit var genreCall: Call<List<GenreModel>>
+
+    private var genresMovie:MutableLiveData<Movies?> =MutableLiveData<Movies?>()
+    private lateinit var genresMovieCall: Call<Movies>
+
 
     fun getMovies(callback: NetworkResponseCallback, forceFetch: Boolean, page: Int): MutableLiveData<Movies?> {
         mCallback = callback
@@ -131,6 +134,30 @@ class MoviesRepository private constructor() {
         })
 
         return genres;
+    }
+
+
+    fun getGenresMovie( callback: NetworkResponseCallback, forceFetch: Boolean, genreId:Int,page: Int):MutableLiveData<Movies?>{
+        mCallback=callback
+        if (genresMovie.value!=null&&!forceFetch){
+            mCallback.onResponseSuccess()
+            return genresMovie
+        }
+
+        genresMovieCall=RestClient.getInstance().getApiService().getGenresMovie(genreId,page)
+        genresMovieCall.enqueue(object :Callback<Movies?>{
+            override fun onResponse(p0: Call<Movies?>, response: Response<Movies?>) {
+                genresMovie.value=response.body()
+                mCallback.onResponseSuccess()
+            }
+
+            override fun onFailure(p0: Call<Movies?>, t: Throwable) {
+                genresMovie.value=null
+                mCallback.onResponseFailure(t)
+            }
+
+        })
+        return genresMovie;
     }
 
     companion object {
