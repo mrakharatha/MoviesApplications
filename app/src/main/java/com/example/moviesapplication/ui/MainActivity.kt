@@ -23,6 +23,7 @@ import com.example.moviesapplication.models.genre.GenreModel
 import com.example.moviesapplication.ui.addmovie.AddMovieActivity
 import com.example.moviesapplication.ui.user.LoginActivity
 import com.example.moviesapplication.ui.user.RegisterUserActivity
+import com.example.moviesapplication.viewmodels.UserViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var moviesAdapter: MoviesAdapter
     lateinit var genresAdapter: GenresAdapter
     private lateinit var moviesViewModel: MoviesViewModel
+    private lateinit var userViewModel: UserViewModel
     var searchText: String = ""
     var token: String? = ""
 
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
             moviesViewModel = ViewModelProvider(this).get(MoviesViewModel::class.java)
+            userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
             binding.viewModel = moviesViewModel
             binding.lifecycleOwner = this
             initRecyclerView()
@@ -152,8 +155,27 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         binding.ivUser.setOnClickListener {
-            val intent = Intent(this@MainActivity, RegisterUserActivity::class.java)
-            startActivity(intent)
+            userViewModel.getUser(token!!).observe(this, Observer { user ->
+                binding.progressBar.visibility = View.VISIBLE
+                AlertDialog.Builder(this@MainActivity).setMessage("user: ${user?.name} \n email: ${user?.email}").show()
+            })
+
+
+            userViewModel.mShowApiError.observe(this@MainActivity) {
+                AlertDialog.Builder(this@MainActivity).setMessage(it).show()
+            }
+            userViewModel.mShowProgressBar.observe(this@MainActivity) { bt ->
+                if (bt) {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.fabRefresh.hide()
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                    binding.fabRefresh.show()
+                }
+            }
+            userViewModel.mShowNetworkError.observe(this@MainActivity) {
+                AlertDialog.Builder(this@MainActivity).setMessage(R.string.app_no_internet_msg).show()
+            }
         }
     }
 

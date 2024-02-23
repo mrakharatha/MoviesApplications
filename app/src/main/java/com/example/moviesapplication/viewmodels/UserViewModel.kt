@@ -7,6 +7,7 @@ import com.example.moviesapplication.interfaces.NetworkResponseCallback
 import com.example.moviesapplication.models.loginuser.UserLoginModel
 import com.example.moviesapplication.models.registeruser.RegisterUserInput
 import com.example.moviesapplication.models.registeruser.RegisterUserModel
+import com.example.moviesapplication.models.user.UserModel
 import com.example.moviesapplication.repositories.MoviesRepository
 import com.example.moviesapplication.repositories.UsersRepository
 import com.example.moviesapplication.utils.NetworkHelper
@@ -18,6 +19,7 @@ class UserViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private lateinit var registerUser: MutableLiveData<RegisterUserModel?>
     private lateinit var userLogin: MutableLiveData<UserLoginModel?>
+    private lateinit var user: MutableLiveData<UserModel?>
     private var mRepository = UsersRepository.getInstance()
 
 
@@ -58,5 +60,25 @@ class UserViewModel(private val app: Application) : AndroidViewModel(app) {
         }
 
         return userLogin
+    }
+
+    fun getUser(token: String): MutableLiveData<UserModel?> {
+        if (NetworkHelper.isOnline(app.baseContext)) {
+            mShowProgressBar.value = true
+            user = mRepository.getUser(object : NetworkResponseCallback {
+                override fun onResponseSuccess() {
+                    mShowProgressBar.value = false
+                }
+
+                override fun onResponseFailure(th: Throwable) {
+                    mShowApiError.value = th.message
+                }
+
+            }, token)
+        } else {
+            mShowNetworkError.value = true
+        }
+
+        return user
     }
 }

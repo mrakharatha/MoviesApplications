@@ -6,6 +6,7 @@ import com.example.moviesapplication.models.loginuser.UserLoginModel
 import com.example.moviesapplication.models.movieslist.Movies
 import com.example.moviesapplication.models.registeruser.RegisterUserInput
 import com.example.moviesapplication.models.registeruser.RegisterUserModel
+import com.example.moviesapplication.models.user.UserModel
 import com.example.moviesapplication.networks.RestClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,6 +21,10 @@ class UsersRepository private constructor() {
 
     private var userLogin: MutableLiveData<UserLoginModel?> = MutableLiveData<UserLoginModel?>()
     private lateinit var userLoginCall: Call<UserLoginModel>
+
+
+    private var user: MutableLiveData<UserModel?> = MutableLiveData<UserModel?>()
+    private lateinit var userCall: Call<UserModel>
 
     fun registerUser(
         callback: NetworkResponseCallback,
@@ -75,6 +80,30 @@ class UsersRepository private constructor() {
         })
 
         return userLogin
+    }
+
+
+    fun getUser(callback: NetworkResponseCallback,token:String):MutableLiveData<UserModel?>{
+        mCallback = callback
+        if (user.value!=null){
+            mCallback.onResponseSuccess()
+            return user
+        }
+
+        userCall=RestClient.getInstance().getApiService().getUser("Bearer ${token.toString()}","application/json")
+        userCall.enqueue(object :Callback<UserModel>{
+            override fun onResponse(p0: Call<UserModel>, response: Response<UserModel>) {
+                user.value=response.body()
+                mCallback.onResponseSuccess()
+            }
+
+            override fun onFailure(p0: Call<UserModel>, th: Throwable) {
+                user.value=null
+                mCallback.onResponseFailure(th)
+            }
+        })
+
+        return user
     }
 
     companion object {

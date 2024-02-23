@@ -5,6 +5,7 @@ import com.example.moviesapplication.models.moviedetail.MovieDetailModel
 import com.example.moviesapplication.models.movieslist.Movies
 import com.example.moviesapplication.models.registeruser.RegisterUserInput
 import com.example.moviesapplication.models.registeruser.RegisterUserModel
+import com.example.moviesapplication.models.user.UserModel
 import okhttp3.RequestBody
 
 import retrofit2.Call
@@ -55,4 +56,10 @@ interface ApiServices {
         @Query("password") password: String,
     ): Call<UserLoginModel>
 
+
+    @GET("api/user")
+    fun getUser(
+        @Header("authorization") authorization: String,
+        @Header("accept") accept: String)
+    : Call<UserModel>
 }
