@@ -2,6 +2,7 @@ package com.example.moviesapplication.repositories
 
 import androidx.lifecycle.MutableLiveData
 import com.example.moviesapplication.interfaces.NetworkResponseCallback
+import com.example.moviesapplication.models.loginuser.UserLoginModel
 import com.example.moviesapplication.models.movieslist.Movies
 import com.example.moviesapplication.models.registeruser.RegisterUserInput
 import com.example.moviesapplication.models.registeruser.RegisterUserModel
@@ -16,6 +17,9 @@ class UsersRepository private constructor() {
     private var registerUser: MutableLiveData<RegisterUserModel?> = MutableLiveData<RegisterUserModel?>()
     private lateinit var registerUserCall: Call<RegisterUserModel>
 
+
+    private var userLogin: MutableLiveData<UserLoginModel?> = MutableLiveData<UserLoginModel?>()
+    private lateinit var userLoginCall: Call<UserLoginModel>
 
     fun registerUser(
         callback: NetworkResponseCallback,
@@ -44,6 +48,34 @@ class UsersRepository private constructor() {
         return registerUser
     }
 
+
+    fun loginUser(
+        callback: NetworkResponseCallback,
+        username: String,
+        password: String
+    ): MutableLiveData<UserLoginModel?> {
+        mCallback = callback
+        if (userLogin.value != null) {
+            mCallback.onResponseSuccess()
+            return userLogin
+        }
+
+        userLoginCall = RestClient.getInstance().getApiService().loginUser("password", username, password)
+        userLoginCall.enqueue(object : Callback<UserLoginModel> {
+            override fun onResponse(p0: Call<UserLoginModel>, response: Response<UserLoginModel>) {
+                userLogin.value = response.body()
+                mCallback.onResponseSuccess()
+            }
+
+            override fun onFailure(p0: Call<UserLoginModel>, th: Throwable) {
+                userLogin.value = null
+                mCallback.onResponseFailure(th)
+            }
+
+        })
+
+        return userLogin
+    }
 
     companion object {
         private var mInstance: UsersRepository? = null

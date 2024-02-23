@@ -1,6 +1,8 @@
 package com.example.moviesapplication.ui
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -19,6 +21,7 @@ import com.example.moviesapplication.R
 import com.example.moviesapplication.adapters.GenresAdapter
 import com.example.moviesapplication.models.genre.GenreModel
 import com.example.moviesapplication.ui.addmovie.AddMovieActivity
+import com.example.moviesapplication.ui.user.LoginActivity
 import com.example.moviesapplication.ui.user.RegisterUserActivity
 
 class MainActivity : AppCompatActivity() {
@@ -28,16 +31,30 @@ class MainActivity : AppCompatActivity() {
     lateinit var genresAdapter: GenresAdapter
     private lateinit var moviesViewModel: MoviesViewModel
     var searchText: String = ""
+    var token: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        moviesViewModel = ViewModelProvider(this).get(MoviesViewModel::class.java)
-        binding.viewModel = moviesViewModel
-        binding.lifecycleOwner = this
-        initRecyclerView()
-        initializeObservers()
-        listener()
+
+
+        val sharedPreferences: SharedPreferences =
+            this@MainActivity.getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        token = sharedPreferences.getString("PREFS_AUTH_ACCESSES_TOKEN", null)
+
+        if (token == null) {
+            finish()
+            val intent = Intent(this@MainActivity, LoginActivity::class.java)
+            startActivity(intent)
+        } else {
+            binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+            moviesViewModel = ViewModelProvider(this).get(MoviesViewModel::class.java)
+            binding.viewModel = moviesViewModel
+            binding.lifecycleOwner = this
+            initRecyclerView()
+            initializeObservers()
+            listener()
+        }
+
     }
 
 
@@ -65,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 moviesAdapter.setData(movie?.data!!, this@MainActivity)
             })
 
-        moviesViewModel.getMovies(false,1).observe(this, Observer { movie ->
+        moviesViewModel.getMovies(false, 1).observe(this, Observer { movie ->
             moviesAdapter.setData(movie?.data!!, this@MainActivity)
         })
 
@@ -130,12 +147,12 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
             }
         })
-        binding.fabAddMovie.setOnClickListener{
-            val intent=Intent(this@MainActivity,AddMovieActivity::class.java)
+        binding.fabAddMovie.setOnClickListener {
+            val intent = Intent(this@MainActivity, AddMovieActivity::class.java)
             startActivity(intent)
         }
         binding.ivUser.setOnClickListener {
-            val intent=Intent(this@MainActivity,RegisterUserActivity::class.java)
+            val intent = Intent(this@MainActivity, RegisterUserActivity::class.java)
             startActivity(intent)
         }
     }

@@ -1,5 +1,6 @@
 import com.example.moviesapplication.models.addmovie.AddMovieModel
 import com.example.moviesapplication.models.genre.GenreModel
+import com.example.moviesapplication.models.loginuser.UserLoginModel
 import com.example.moviesapplication.models.moviedetail.MovieDetailModel
 import com.example.moviesapplication.models.movieslist.Movies
 import com.example.moviesapplication.models.registeruser.RegisterUserInput
@@ -18,7 +19,7 @@ interface ApiServices {
 
 
     @GET("api/v1/movies")
-    fun searchMovies(@Query("q") movieName:String, @Query("page") page: Int): Call<Movies>
+    fun searchMovies(@Query("q") movieName: String, @Query("page") page: Int): Call<Movies>
 
     @GET("api/v1/movies/{movie_id}")
     fun getMoviesDetail(@Path("movie_id") id: Int): Call<MovieDetailModel>
@@ -28,22 +29,30 @@ interface ApiServices {
     fun getGenres(): Call<List<GenreModel>>
 
     @GET("api/v1/genres/{genre_id}/movies")
-    fun getGenresMovie(@Path("genre_id") genreId:Int, @Query("page") page: Int): Call<Movies>
+    fun getGenresMovie(@Path("genre_id") genreId: Int, @Query("page") page: Int): Call<Movies>
 
     @POST("api/v1/movies/multi")
     @Multipart
     fun addMovie(
-        @Part("title") title:String,
-        @Part("imdb_id") imdb_id:String,
-        @Part("country") country:String,
-        @Part("year") year:Int,
-        @Part("director") director:String?,
-        @Part("imdb_rating") imdb_rating:String?,
-        @Part("imdb_votes") imdb_votes:String?,
-        @Part("poster") poster:RequestBody?,
-    ):Call<AddMovieModel>
+        @Part("title") title: String,
+        @Part("imdb_id") imdb_id: String,
+        @Part("country") country: String,
+        @Part("year") year: Int,
+        @Part("director") director: String?,
+        @Part("imdb_rating") imdb_rating: String?,
+        @Part("imdb_votes") imdb_votes: String?,
+        @Part("poster") poster: RequestBody?,
+    ): Call<AddMovieModel>
 
     @POST("api/v1/register")
-    fun registerUser(@Body registerUser:RegisterUserInput):Call<RegisterUserModel>
+    fun registerUser(@Body registerUser: RegisterUserInput): Call<RegisterUserModel>
+
+
+    @POST("oauth/token")
+    fun loginUser(
+        @Query("grant_type") grant_type: String,
+        @Query("username") username: String,
+        @Query("password") password: String,
+    ): Call<UserLoginModel>
 
 }

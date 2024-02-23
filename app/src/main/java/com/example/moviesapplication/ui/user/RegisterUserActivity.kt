@@ -50,6 +50,8 @@ class RegisterUserActivity : AppCompatActivity() {
                 userViewModel.registerUser(userInput).observe(this, Observer { user ->
                     Toast.makeText(context, "id: ${user?.id.toString()} \n email : ${user?.email}", Toast.LENGTH_SHORT)
                         .show()
+
+                    finish()
                 })
 
                 userViewModel.mShowApiError.observe(this) {

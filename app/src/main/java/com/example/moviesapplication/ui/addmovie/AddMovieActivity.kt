@@ -137,9 +137,7 @@ class AddMovieActivity : AppCompatActivity() {
                     MovieInput(title, imdb_id, country, year.toInt(), director, imdb_rating, imdb_votes, poster)
                 addMovieViewModel.addMovie(movieInput).observe(this) {
                     Toast.makeText(context, "فیلم با موفقیت ثبت شد", Toast.LENGTH_SHORT).show()
-
-                    val intent = Intent(this@AddMovieActivity, MainActivity::class.java)
-                    startActivity(intent)
+                    finish()
                 }
 
                 addMovieViewModel.mShowApiError.observe(this) {
