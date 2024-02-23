@@ -19,6 +19,7 @@ import com.example.moviesapplication.R
 import com.example.moviesapplication.adapters.GenresAdapter
 import com.example.moviesapplication.models.genre.GenreModel
 import com.example.moviesapplication.ui.addmovie.AddMovieActivity
+import com.example.moviesapplication.ui.user.RegisterUserActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -131,6 +132,10 @@ class MainActivity : AppCompatActivity() {
         })
         binding.fabAddMovie.setOnClickListener{
             val intent=Intent(this@MainActivity,AddMovieActivity::class.java)
+            startActivity(intent)
+        }
+        binding.ivUser.setOnClickListener {
+            val intent=Intent(this@MainActivity,RegisterUserActivity::class.java)
             startActivity(intent)
         }
     }

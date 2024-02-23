@@ -14,8 +14,8 @@ import com.example.moviesapplication.utils.NetworkHelper
 
 class MoviesViewModel(private val app: Application) : AndroidViewModel(app) {
 
-      val mShowProgressBar = MutableLiveData(true)
-      val mShowNetworkError: MutableLiveData<Boolean> = MutableLiveData()
+    val mShowProgressBar = MutableLiveData(true)
+    val mShowNetworkError: MutableLiveData<Boolean> = MutableLiveData()
     val mShowApiError = MutableLiveData<String>()
 
     private lateinit var movies: MutableLiveData<Movies?>

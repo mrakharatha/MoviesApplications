@@ -2,6 +2,8 @@ import com.example.moviesapplication.models.addmovie.AddMovieModel
 import com.example.moviesapplication.models.genre.GenreModel
 import com.example.moviesapplication.models.moviedetail.MovieDetailModel
 import com.example.moviesapplication.models.movieslist.Movies
+import com.example.moviesapplication.models.registeruser.RegisterUserInput
+import com.example.moviesapplication.models.registeruser.RegisterUserModel
 import okhttp3.RequestBody
 
 import retrofit2.Call
@@ -40,4 +42,8 @@ interface ApiServices {
         @Part("imdb_votes") imdb_votes:String?,
         @Part("poster") poster:RequestBody?,
     ):Call<AddMovieModel>
+
+    @POST("api/v1/register")
+    fun registerUser(@Body registerUser:RegisterUserInput):Call<RegisterUserModel>
+
 }

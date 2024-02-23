@@ -12,13 +12,14 @@ import com.example.moviesapplication.utils.NetworkHelper
 import java.io.File
 
 class AddMovieViewModel(private val app: Application) : AndroidViewModel(app) {
-    private lateinit var addMovie: MutableLiveData<AddMovieModel?>
     val mShowProgressBar = MutableLiveData(true)
     val mShowNetworkError: MutableLiveData<Boolean> = MutableLiveData()
     val mShowApiError = MutableLiveData<String>()
-    var mRepository = MoviesRepository.getInstance()
 
-    fun addMovie( movieInput: MovieInput): MutableLiveData<AddMovieModel?> {
+    private lateinit var addMovie: MutableLiveData<AddMovieModel?>
+    private var mRepository = MoviesRepository.getInstance()
+
+    fun addMovie(movieInput: MovieInput): MutableLiveData<AddMovieModel?> {
         if (NetworkHelper.isOnline(app.baseContext)) {
             mShowProgressBar.value = true
             addMovie = mRepository.addMovie(object : NetworkResponseCallback {
