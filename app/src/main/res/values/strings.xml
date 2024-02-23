@@ -16,7 +16,7 @@
     <string name="actors">بازیگران :</string>
     <string name="plot">طراح :</string>
     <string name="rating_score">رتبه و ارزش فیلم</string>
-    <string name="imdb_rating"> رتبه در سایت imdb :</string>
+    <string name="imdb_rating">رتبه در سایت imdb :</string>
     <string name="imdb_votes">تعداد رای سایت imdb :</string>
     <string name="imdb_id">شناسه imdb :</string>
     <string name="type">نوع محصول :</string>
@@ -25,5 +25,6 @@
     <string name="movie_name">نام فیلم</string>
     <string name="imdb_text">شناسه‌ی فیلم در سایت IMDB</string>
     <string name="poster">پوستر فیلم</string>
+    <string name="add_movie">ثبت فیلم</string>
 
 </resources>

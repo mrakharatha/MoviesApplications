@@ -1,10 +1,13 @@
+import com.example.moviesapplication.models.addmovie.AddMovieModel
 import com.example.moviesapplication.models.genre.GenreModel
 import com.example.moviesapplication.models.moviedetail.MovieDetailModel
 import com.example.moviesapplication.models.movieslist.Movies
+import okhttp3.RequestBody
 
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.http.*
+import java.io.File
 
 interface ApiServices {
 
@@ -24,4 +27,17 @@ interface ApiServices {
 
     @GET("api/v1/genres/{genre_id}/movies")
     fun getGenresMovie(@Path("genre_id") genreId:Int, @Query("page") page: Int): Call<Movies>
+
+    @POST("api/v1/movies/multi")
+    @Multipart
+    fun addMovie(
+        @Part("title") title:String,
+        @Part("imdb_id") imdb_id:String,
+        @Part("country") country:String,
+        @Part("year") year:Int,
+        @Part("director") director:String?,
+        @Part("imdb_rating") imdb_rating:String?,
+        @Part("imdb_votes") imdb_votes:String?,
+        @Part("poster") poster:RequestBody?,
+    ):Call<AddMovieModel>
 }

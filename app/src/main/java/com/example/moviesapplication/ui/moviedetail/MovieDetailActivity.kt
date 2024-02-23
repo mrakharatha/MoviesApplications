@@ -24,7 +24,6 @@ class MovieDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_detail)
 
         movieId = intent.getIntExtra("movieId", 0)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail)

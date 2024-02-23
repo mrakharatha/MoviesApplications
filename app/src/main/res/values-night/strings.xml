@@ -23,4 +23,5 @@
     <string name="movie_name">نام فیلم</string>
     <string name="imdb_text">شناسه‌ی فیلم در سایت IMDB</string>
     <string name="poster">پوستر فیلم</string>
+    <string name="add_movie">ثبت فیلم</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.moviesapplication.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -17,6 +18,7 @@ import com.example.moviesapplication.viewmodels.MoviesViewModel
 import com.example.moviesapplication.R
 import com.example.moviesapplication.adapters.GenresAdapter
 import com.example.moviesapplication.models.genre.GenreModel
+import com.example.moviesapplication.ui.addmovie.AddMovieActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,7 +30,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         moviesViewModel = ViewModelProvider(this).get(MoviesViewModel::class.java)
         binding.viewModel = moviesViewModel
@@ -128,6 +129,10 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
             }
         })
+        binding.fabAddMovie.setOnClickListener{
+            val intent=Intent(this@MainActivity,AddMovieActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     companion object {
